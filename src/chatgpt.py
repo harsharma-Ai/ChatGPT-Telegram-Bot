@@ -1,6 +1,22 @@
 """
 Author: NONAME
-"""
+
+-> this module conatins the implementation of a telegram bot that uses the OpemAi chatGPT API
+   to generate responses to users.
+
+   usage:-
+          1. Set up a telegram bot and obtain its token.
+          2. Set up an OpenAi account and obtain an API key.
+          3. Set the environment var. "Token" and "Openai_api_key"
+             to the bot token and OpenAI API key, respectively.
+          4. Run the script to start the bot.
+
+    -> Note: this implementation uses the aiogram, openai library to interact with the Telegram API 
+             and the Openai API, respectively.
+
+    -> E.g;  $ python chatgpt.py
+
+    """
 
 import os
 import asyncio
