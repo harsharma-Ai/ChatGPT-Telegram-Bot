@@ -1,0 +1,29 @@
+==> 2025-08-27 18:23:11 <==
+# cmd: /opt/conda/bin/conda create --prefix ./env python=3.8 -y
+# conda version: 25.5.1
++defaults/linux-64::_libgcc_mutex-0.1-main
++defaults/linux-64::_openmp_mutex-5.1-1_gnu
++defaults/linux-64::ca-certificates-2025.7.15-h06a4308_0
++defaults/linux-64::ld_impl_linux-64-2.40-h12ee557_0
++defaults/linux-64::libffi-3.4.4-h6a678d5_1
++defaults/linux-64::libgcc-ng-11.2.0-h1234567_1
++defaults/linux-64::libgomp-11.2.0-h1234567_1
++defaults/linux-64::libstdcxx-ng-11.2.0-h1234567_1
++defaults/linux-64::libxcb-1.17.0-h9b100fa_0
++defaults/linux-64::ncurses-6.5-h7934f7d_0
++defaults/linux-64::openssl-3.0.17-h5eee18b_0
++defaults/linux-64::pip-24.2-py38h06a4308_0
++defaults/linux-64::pthread-stubs-0.3-h0ce48e5_1
++defaults/linux-64::python-3.8.20-he870216_0
++defaults/linux-64::readline-8.3-hc2a1206_0
++defaults/linux-64::setuptools-75.1.0-py38h06a4308_0
++defaults/linux-64::sqlite-3.50.2-hb25bd0a_1
++defaults/linux-64::tk-8.6.15-h54e0aa7_0
++defaults/linux-64::wheel-0.44.0-py38h06a4308_0
++defaults/linux-64::xorg-libx11-1.8.12-h9b100fa_1
++defaults/linux-64::xorg-libxau-1.0.12-h9b100fa_0
++defaults/linux-64::xorg-libxdmcp-1.1.5-h9b100fa_0
++defaults/linux-64::xorg-xorgproto-2024.1-h5eee18b_1
++defaults/linux-64::xz-5.6.4-h5eee18b_1
++defaults/linux-64::zlib-1.2.13-h5eee18b_1
+# update specs: ['python=3.8']

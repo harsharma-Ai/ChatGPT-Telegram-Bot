@@ -1,86 +1,92 @@
 """
-Author: IKKO_BOT
+Author: NONAME
 """
 
 import os
+import asyncio
 from dotenv import load_dotenv
-from aiogram import Bot, Dispatcher, executor , types
+from aiogram import Bot, Dispatcher, F
+from aiogram.types import Message
+from aiogram.enums import ParseMode
+from aiogram.client.default import DefaultBotProperties
+from aiogram.fsm.storage.memory import MemoryStorage
+from aiogram import Router
 import openai
 
-class Reference:
-    """
-    A class to store the previous rersponses from the chatGPT API.
-    """
-    def __init__(self) -> None:
-        self.response =""
-
-# Load env variables
+# Load environment variables
 load_dotenv()
 
-# set up OpenAI API key.
+# Set OpenAI API key
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
-# Create a reference object to store the previous response
+# Telegram Bot token
+TOKEN = os.getenv("TOKEN")
+
+# ChatGPT model
+MODEL_NAME = "gpt-3.5-turbo"
+
+# Create reference object
+class Reference:
+    def __init__(self):
+        self.response = ""
+
 reference = Reference()
 
-# Bot token can be obtained via https://t.me/BotFather
-Token = os.getenv("TOKEN")
-
-# Model used in chatGPT
-MODEL_NAME ="gpt-3.5-turbo"
-
 # Initialize bot and dispatcher
-bot = Bot(token=TOKEN)
-dispatcher = Dispatcher(bot)
+bot = Bot(token=TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
 
+storage = MemoryStorage()
+dp = Dispatcher(storage=storage)
+
+# Create router
+router = Router()
+dp.include_router(router)
+
+# Clear context
 def clear_past():
-    """
-    A function to clear the previous conversation and context.
-    """
-    reference.response =""
+    reference.response = ""
 
-@dispatcher.message_handler(commands=['clear'])
-async def clear(message: types.Message):
-    """
-    A handler to clear the previous conversation and context.
-    """
+# Handlers
+@router.message(F.text =="/start")
+async def welcome(message: Message):
     clear_past()
-    await message.reply("Cleared the past conmtext and chat Bro..!")
+    await message.answer("Hey, I'm IKKO BOT powered by AI and created by Noname..!")
 
-@dispatcher.message_handler(commands=['help'])
-async def helper(message: types.Message):
-    """
-    A handler to display the help menu.
-    """
+@router.message(F.text =="/help")
+async def helper(message: Message):
     help_command = """
-    Hi there, I'm IKKO bot powered by chatGPT! Please follow these commands -
-    /start - to start the conversation 
-    /clear - to clear the past converstion and context.
-    /help - to get this help menu.
-    I hope this helps.
-    """
+Hi there, I'm IKKO bot based on AI. Please follow these commands:
+/start - to start the conversation.
+/clear - to clear the past conversation and context.
+/help - to get this help menu.
+I HOPE THIS HELPS.
+"""
+    await message.answer(help_command)
 
-    await message.reply(help_command)
+@router.message(F.text == "/clear")
+async def clear(message: Message):
+    clear_past()
+    await message.answer("Cleared the past context and chat Bro..!")
 
-@dispatcher.message_handler(help_command)
-async def chatgpt(message: types.Message):
-    """
-    A handler to process the user's input and generate a response using cahtGPT API KEY
-    """
-    print(f">>> USER: \n{message.text}")
+@router.message()
+async def chatgpt(message: Message):
+    print(f">>> USER:\n{message.text}")
     response = openai.ChatCompletion.create(
         model=MODEL_NAME,
         messages=[
-            {"role": "assistant", "content": reference.response}, # here role means bot
-            {"role":"user", "content": message.text} # our new question
+            {"role": "assistant", "content": reference.response},
+            {"role": "user", "content": message.text}
         ]
     )
     reference.response = response['choices'][0]['message']['content']
-    print(f">>> chatGPT: \n{reference.response}")
-    await bot.send_message(chat_id=message.chat.id, text=reference.response)
+    print(f">>> ChatGPT:\n{reference.response}")
+    await message.answer(reference.response)
 
+# Main entry
+async def main():
+    print("Starting..!")
+    await dp.start_polling(bot)
+    print("Stopped")
 
-if __name__ == '__main__':
-    print("Starting...")
-    executor.start_polling(dispatcher)
-    print("stopped")
+if __name__ == "__main__":
+    asyncio.run(main())

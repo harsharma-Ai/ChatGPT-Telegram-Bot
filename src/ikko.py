@@ -1,32 +1,40 @@
-"""
-This is a Ikko bot.
-It respond to any incoming messages.
-"""
-
 import logging
+import asyncio
+import os
+from aiogram import Bot, Dispatcher, F, Router
+from aiogram.types import Message
+from aiogram.enums import ParseMode
+from aiogram.client.default import DefaultBotProperties
+from dotenv import load_dotenv
 
-from aiogram import Bot, Dispatcher , executor, types
+load_dotenv()
 
-API_TOKEN = '8220974162:AAEXP6Zz4ugDkbW2wioN9M2LDSKfiebRetk'
+API_TOKEN = os.getenv("TOKEN")
 
-#Configuration logging 
+# Configure logging
+logging.basicConfig(level=logging.INFO)
 
-logging.basicConfig(level=loggging.INFO)
+# Initialize bot and dispatcher
+bot = Bot(
+    token=API_TOKEN,
+    default=DefaultBotProperties(parse_mode=ParseMode.HTML)
+)
+dp = Dispatcher()
+router = Router()
+dp.include_router(router)
 
-#Initialize bot and dispatcher
-bot= Bot(token=API_TOKEN)
-dp= Dispatcher(bot)
+# Handlers
+@router.message(F.text.in_(['start', 'help']))
+async def send_welcome(message: Message):
+    await message.reply("Hi!\nI'm EchoBot!\nPowered by aiogram V3.")
 
-@dp.message_handler(commands=['start','help'])
-async def send_welcome(message: types.Message):
-    """
-    This handler will be called when users sends 'start' or '/help' command 
-    """
-    await message.reply("Hey...!\n I'm IKKO_Bot!\n Powered by aiogram.")
-
-@dp.message_handler()
-async def ikko(message: types.Message):
+@router.message(F.text)
+async def echo(message: Message):
     await message.answer(message.text)
 
-if __name__=='__main__':
-     executor.start_polling(dp,skip_updates)
+# Main entry point
+async def main():
+    await dp.start_polling(bot)
+
+if __name__ == "__main__":
+    asyncio.run(main())

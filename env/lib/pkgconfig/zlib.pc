@@ -1,0 +1,13 @@
+prefix=/workspaces/ChatGPT-Telegram-Bot/env
+exec_prefix=/workspaces/ChatGPT-Telegram-Bot/env
+libdir=/workspaces/ChatGPT-Telegram-Bot/env/lib
+sharedlibdir=/workspaces/ChatGPT-Telegram-Bot/env/lib
+includedir=/workspaces/ChatGPT-Telegram-Bot/env/include
+
+Name: zlib
+Description: zlib compression library
+Version: 1.2.13
+
+Requires:
+Libs: -L${libdir} -L${sharedlibdir} -lz
+Cflags: -I${includedir}
