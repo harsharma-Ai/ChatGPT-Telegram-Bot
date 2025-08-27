@@ -32,13 +32,13 @@ import openai
 # Load environment variables
 load_dotenv()
 
-# Set OpenAI API key
+# Set OpenAI API key call from env var
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
-# Telegram Bot token
+# Telegram Bot token call from env var
 TOKEN = os.getenv("TOKEN")
 
-# ChatGPT model
+# ChatGPT model used
 MODEL_NAME = "gpt-3.5-turbo"
 
 # Create reference object
@@ -66,7 +66,8 @@ def clear_past():
 @router.message(F.text =="/start")
 async def welcome(message: Message):
     clear_past()
-    await message.answer("Hey, I'm IKKO BOT powered by AI and created by Noname..!")
+    await message.answer("Hey, \n I'm IKKO BOT powered by AI and created by \
+                         Noname..! \n How may I assist you today?")
 
 @router.message(F.text =="/help")
 async def helper(message: Message):
@@ -82,7 +83,7 @@ I HOPE THIS HELPS.
 @router.message(F.text == "/clear")
 async def clear(message: Message):
     clear_past()
-    await message.answer("Cleared the past context and chat Bro..!")
+    await message.answer("I've cleared the past conversation and context.")
 
 @router.message()
 async def chatgpt(message: Message):
@@ -90,13 +91,13 @@ async def chatgpt(message: Message):
     response = openai.ChatCompletion.create(
         model=MODEL_NAME,
         messages=[
-            {"role": "assistant", "content": reference.response},
-            {"role": "user", "content": message.text}
+            {"role": "assistant", "content": reference.response},  # role:assistant is bot
+            {"role": "user", "content": message.text}   # our query
         ]
     )
     reference.response = response['choices'][0]['message']['content']
-    print(f">>> ChatGPT:\n{reference.response}")
-    await message.answer(reference.response)
+    print(f">>> ChatGPT:\n\t{reference.response}")
+    await bot.send_message(chat_id=message.chat.id, text= reference.response)
 
 # Main entry
 async def main():
